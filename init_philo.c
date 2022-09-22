@@ -6,7 +6,7 @@
 /*   By: alemarti <alemarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/22 15:42:48 by alemarti          #+#    #+#             */
-/*   Updated: 2022/09/22 17:42:51 by alemarti         ###   ########.fr       */
+/*   Updated: 2022/09/22 21:49:18 by alemarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,11 +77,13 @@ static int	init_data(t_data **data, int argc, char **argv)
 		return (ft_error("Error creating printf mutex.", aux));
 	if (init_forks_mutex(aux))
 		return (ft_error("Error creating forks mutex.", aux));
+	if (pthread_mutex_init(&aux->mutex_data, NULL))
+		return (ft_error("Error creating data mutex.", aux));
 	*data = aux;
 	return (0);
 }
 
-static void	init_philo(t_philo *philo, int i, \
+static int	init_philo(t_philo *philo, int i, \
 						t_data *data, pthread_mutex_t *forks)
 {
 	philo->id = i + 1;
@@ -97,6 +99,9 @@ static void	init_philo(t_philo *philo, int i, \
 		philo->lf = forks + i - 1;
 		philo->rf = forks + i;
 	}
+	if (pthread_mutex_init(&philo->mutex_philo, NULL))
+		return (ft_error("Error creating data mutex.", NULL));
+	return (0);
 }
 
 int	init_philos(t_philo **philos, int argc, char **argv)
@@ -115,7 +120,8 @@ int	init_philos(t_philo **philos, int argc, char **argv)
 	}
 	i = -1;
 	while (++i < data->num_philos)
-		init_philo(aux + i, i, data, data->mutex_fork);
+		if (init_philo(aux + i, i, data, data->mutex_fork))
+			return (ft_error("Error initializing philosopher", NULL));
 	*philos = aux;
 	return (0);
 }
