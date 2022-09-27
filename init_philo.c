@@ -6,7 +6,7 @@
 /*   By: alemarti <alemarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/22 15:42:48 by alemarti          #+#    #+#             */
-/*   Updated: 2022/09/22 21:49:18 by alemarti         ###   ########.fr       */
+/*   Updated: 2022/09/27 14:00:29 by alemarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ static int	init_philo(t_philo *philo, int i, \
 						t_data *data, pthread_mutex_t *forks)
 {
 	philo->id = i + 1;
-	philo->meal_count = 0;
+	philo->meal_count = data->num_meals;
 	philo->data = data;
 	if (i == 0)
 	{

@@ -6,7 +6,7 @@
 /*   By: alemarti <alemarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/22 15:35:45 by alemarti          #+#    #+#             */
-/*   Updated: 2022/09/22 22:24:35 by alemarti         ###   ########.fr       */
+/*   Updated: 2022/09/27 14:27:18 by alemarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,24 @@ static void	*philo_routine(void *arg)
 	{
 		//TODO: pensar, comer, dormir
 
-		printf("philos:%d\n", philo->data->num_philos);
+		//printf("philos:%d\n", philo->data->num_philos);
 		take_forks(philo);
 		if (check_stop(philo->data))
+		{
+			printf("Take forks brake\n");
 			break;
+		}
 		philo_eats(philo);
-		printf("ETED\n");
+		printf("EATED\n");
 		release_forks(philo);
-		if (check_stop(philo->data))
+		printf("\tphilo %d meal count %d\n", philo->id, philo->meal_count);
+		if (philo->meal_count == 0 || check_stop(philo->data))
+		{
 			break;
+		}
 		print_philo_status(philo, "is sleeping");
 		philo_sleep(find_time() + philo->data->t_sleep, philo);
+		
 	}
 	printf("END routine\n");
 	return (0);
@@ -61,6 +68,7 @@ static void	*monitor_routine(void *arg)
 		{
 			if ((philo + i)->ts_death < find_time())
 			{
+				print_philo_status(philo + i, "died");
 				trigger_stop(philo->data);
 				break;
 			}
@@ -72,7 +80,7 @@ static void	*monitor_routine(void *arg)
 	while (++i < philo->data->num_philos)
 	{
 		printf("join\n");
-		//pthread_join((philo + i)->pth_t, NULL);
+		pthread_join((philo + i)->pth_t, NULL);
 		printf("joined\n");
 	}
 	return (0);
@@ -102,5 +110,6 @@ int	main(int argc, char **argv)
 	if (init_philos(&philos, argc, argv))
 		return (ft_error("Error: Failed to initialize philos", NULL));
 	monitor(philos);
+	destroy_everything(&philos);
 	return (0);
 }

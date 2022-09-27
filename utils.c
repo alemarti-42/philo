@@ -6,7 +6,7 @@
 /*   By: alemarti <alemarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/22 15:37:31 by alemarti          #+#    #+#             */
-/*   Updated: 2022/09/22 22:15:20 by alemarti         ###   ########.fr       */
+/*   Updated: 2022/09/27 14:34:56 by alemarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,4 +61,21 @@ int	ft_error(char *str, void *ptr)
 	write(2, str, i);
 	write(2, "\n", 1);
 	return (-1);
+}
+
+int	destroy_everything(t_philo **philos)
+{
+	int	i;
+
+	i = -1;
+	while (++i < data->num_philos)
+	{
+		if (pthread_mutex_destroy(*philos->data->mutex_fork + i))
+			return(ft_error("Error: pthread_mutex_destroy", data->mutex_fork));
+	}
+	free(*philos->data->mutex_fork);
+	pthread_mutex_destroy(*philos->data->mutex_printf);
+	pthread_mutex_destroy(*philos->data->mutex_data);
+	free(*philos->data);
+	
 }

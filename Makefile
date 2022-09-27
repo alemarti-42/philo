@@ -6,7 +6,7 @@
 #    By: alemarti <alemarti@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/08/09 15:21:03 by alemarti          #+#    #+#              #
-#    Updated: 2022/09/22 19:26:22 by alemarti         ###   ########.fr        #
+#    Updated: 2022/09/27 14:00:03 by alemarti         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ NAME		= philo
 
 CC			= gcc
 RM			= rm -f
-CFLAGS		= -Wall -Werror -Wextra -O0 -fsanitize=address -g
+CFLAGS		= -Wall -Werror -Wextra 
 
 all:	$(NAME)
 
@@ -38,5 +38,8 @@ fclean:		clean
 			@${RM} ${NAME}
 				
 re:		fclean all
+
+test:	${OBJS}
+			${CC} ${CFLAGS} -O0 -fsanitize=address -g ${OBJS} -pthread -o test
 
 .PHONY: all bonus clean fclean re

@@ -6,7 +6,7 @@
 /*   By: alemarti <alemarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/22 19:25:01 by alemarti          #+#    #+#             */
-/*   Updated: 2022/09/22 21:35:00 by alemarti         ###   ########.fr       */
+/*   Updated: 2022/09/27 14:04:19 by alemarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,10 @@ void	philo_eats(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->mutex_philo);
 	philo->ts_death = find_time() + philo->data->t_die;
-	pthread_mutex_lock(&philo->mutex_philo);
+	pthread_mutex_unlock(&philo->mutex_philo);
 	print_philo_status(philo, "is eating");
 	philo_sleep(find_time() + philo->data->t_eat, philo);
+	philo->meal_count -= 1;
 }
 
 void	philo_sleep(long long ts_awake, t_philo *philo)
