@@ -6,7 +6,7 @@
 /*   By: alemarti <alemarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/22 15:35:45 by alemarti          #+#    #+#             */
-/*   Updated: 2022/09/27 14:27:18 by alemarti         ###   ########.fr       */
+/*   Updated: 2022/12/19 15:00:24 by alemarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,27 +18,28 @@ static void	*philo_routine(void *arg)
 
 	philo = (t_philo *)arg;
 
-	printf("philo_routine:%d\n", philo->data->num_philos);
+	//printf("philo_routine:%d\n", philo->data->num_philos);
 	while (!check_stop(philo->data))
 	{
 		//TODO: pensar, comer, dormir
 
 		//printf("philos:%d\n", philo->data->num_philos);
+		print_philo_status(philo, "is thinking");
 		take_forks(philo);
-		if (check_stop(philo->data))
-		{
-			printf("Take forks brake\n");
-			break;
-		}
+		// if (check_stop(philo->data))
+		// {
+		// 	printf("Take forks brake\n");
+		// 	break;
+		// }
 		philo_eats(philo);
-		printf("EATED\n");
+		//printf("EATED\n");
 		release_forks(philo);
-		printf("\tphilo %d meal count %d\n", philo->id, philo->meal_count);
+		//printf("\tphilo %d meal count %d\n", philo->id, philo->meal_count);
+		print_philo_status(philo, "is sleeping");
 		if (philo->meal_count == 0 || check_stop(philo->data))
 		{
 			break;
 		}
-		print_philo_status(philo, "is sleeping");
 		philo_sleep(find_time() + philo->data->t_sleep, philo);
 		
 	}
@@ -66,7 +67,7 @@ static void	*monitor_routine(void *arg)
 		i = 0;
 		while (i < philo->data->num_philos)
 		{
-			if ((philo + i)->ts_death < find_time())
+			if ((philo + i)->ts_death < find_time() && philo->meal_count != 0)
 			{
 				print_philo_status(philo + i, "died");
 				trigger_stop(philo->data);
@@ -80,6 +81,7 @@ static void	*monitor_routine(void *arg)
 	while (++i < philo->data->num_philos)
 	{
 		printf("join\n");
+		printf("%d\n", philo->data->num_philos);
 		pthread_join((philo + i)->pth_t, NULL);
 		printf("joined\n");
 	}
@@ -110,6 +112,6 @@ int	main(int argc, char **argv)
 	if (init_philos(&philos, argc, argv))
 		return (ft_error("Error: Failed to initialize philos", NULL));
 	monitor(philos);
-	destroy_everything(&philos);
+	//destroy_everything(&philos);
 	return (0);
 }

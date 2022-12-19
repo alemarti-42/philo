@@ -6,7 +6,7 @@
 /*   By: alemarti <alemarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/22 19:25:01 by alemarti          #+#    #+#             */
-/*   Updated: 2022/09/27 14:04:19 by alemarti         ###   ########.fr       */
+/*   Updated: 2022/12/19 15:15:22 by alemarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,15 +31,19 @@ void	trigger_stop(t_data *data)
 
 void take_forks(t_philo *philo)
 {
-	if (philo->id % 2 == 0)
-		pthread_mutex_lock(philo->lf);
-	else
-		pthread_mutex_lock(philo->rf);
+	if (philo -> id % 2 == 0)
+		usleep(1000);
+	//if (philo->id % 2 == 0)
+	// 	pthread_mutex_lock(philo->rf);
+	// else
+	// 	pthread_mutex_lock(philo->lf);
+	pthread_mutex_lock(philo->lf);
 	print_philo_status(philo, "has taken a fork");
-	if (philo->id % 2 == 0)
-		pthread_mutex_lock(philo->rf);
-	else
-		pthread_mutex_lock(philo->lf);
+	pthread_mutex_lock(philo->rf);
+	//if (philo->id % 2 == 0)
+	// 	pthread_mutex_lock(philo->lf);
+	// else
+	// 	pthread_mutex_lock(philo->rf);
 	print_philo_status(philo, "has taken a fork");
 }
 
