@@ -6,7 +6,7 @@
 /*   By: alemarti <alemarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/22 15:30:59 by alemarti          #+#    #+#             */
-/*   Updated: 2022/12/19 14:07:18 by alemarti         ###   ########.fr       */
+/*   Updated: 2022/12/19 18:32:33 by alemarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,12 @@
 typedef struct s_data
 {
 	int				num_philos;
-	//int				num_forks;
 	int				t_die;
 	int				t_eat;
 	int				t_sleep;
 	int				num_meals;
 	int				flag_stop;
+	int				finished;
 	long long int	t_start;
 	pthread_mutex_t	*mutex_fork;
 	pthread_mutex_t	mutex_printf;
@@ -47,20 +47,24 @@ typedef struct s_philo
 	pthread_t		pth_t;
 }t_philo;
 
-int			ft_error(char *str, void *ptr);
-void		destroy_data(t_data *data);
-long long	find_time(void);
-void		print_philo_status(t_philo *philo, char *str);
-int			check_stop(t_data *data);
-void		print_philo_status(t_philo *philo, char *str);
-
+//init_philo.c
 int			init_philos(t_philo **philos, int argc, char **argv);
 
-void	take_forks(t_philo *philo);
-void	release_forks(t_philo *philo);
-void	philo_eats(t_philo *philo);
-void	philo_sleep(long long time, t_philo *philo);
-void	trigger_stop(t_data *data);
-//int		destroy_everything(t_philo **philos);
+//routine_utils.c
+int			take_forks(t_philo *philo);
+void		release_forks(t_philo *philo);
+void		philo_eats(t_philo *philo);
+void		philo_sleep(long long time, t_philo *philo);
+
+//stop.c
+void		trigger_stop(t_data *data);
+int			check_stop(t_data *data);
+
+//utils.c
+void		print_philo_status(t_philo *philo, char *str);
+long long	find_time(void);
+void		destroy_data(t_data *data);
+int			ft_error(char *str, void *ptr);
+int			destroy_everything(t_philo *philos);
 
 #endif

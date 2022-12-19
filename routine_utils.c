@@ -6,51 +6,32 @@
 /*   By: alemarti <alemarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/22 19:25:01 by alemarti          #+#    #+#             */
-/*   Updated: 2022/12/19 15:15:22 by alemarti         ###   ########.fr       */
+/*   Updated: 2022/12/19 18:27:56 by alemarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	trigger_stop(t_data *data)
-{
-	pthread_mutex_lock(&data->mutex_data);
-	data->flag_stop = 1;
-	pthread_mutex_unlock(&data->mutex_data);
-}
-
-// int		check_stop(t_data *data)
-// {
-// 	int	res;
-
-// 	pthread_mutex_lock(&data->mutex_data);
-// 	res = data->flag_stop;
-// 	pthread_mutex_unlock(&data->mutex_data);
-// 	return (res);
-// }
-
-void take_forks(t_philo *philo)
+int	take_forks(t_philo *philo)
 {
 	if (philo -> id % 2 == 0)
 		usleep(1000);
-	//if (philo->id % 2 == 0)
-	// 	pthread_mutex_lock(philo->rf);
-	// else
-	// 	pthread_mutex_lock(philo->lf);
 	pthread_mutex_lock(philo->lf);
 	print_philo_status(philo, "has taken a fork");
+	if (philo->lf == philo->rf)
+	{
+		pthread_mutex_unlock(philo->lf);
+		return (1);
+	}
 	pthread_mutex_lock(philo->rf);
-	//if (philo->id % 2 == 0)
-	// 	pthread_mutex_lock(philo->lf);
-	// else
-	// 	pthread_mutex_lock(philo->rf);
 	print_philo_status(philo, "has taken a fork");
+	return (0);
 }
 
-void release_forks(t_philo *philo)
+void	release_forks(t_philo *philo)
 {
-		pthread_mutex_unlock(philo->lf);
-		pthread_mutex_unlock(philo->rf);
+	pthread_mutex_unlock(philo->lf);
+	pthread_mutex_unlock(philo->rf);
 }
 
 void	philo_eats(t_philo *philo)

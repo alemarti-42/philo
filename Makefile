@@ -6,14 +6,15 @@
 #    By: alemarti <alemarti@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/08/09 15:21:03 by alemarti          #+#    #+#              #
-#    Updated: 2022/09/27 14:00:03 by alemarti         ###   ########.fr        #
+#    Updated: 2022/12/19 18:28:30 by alemarti         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SRCS		=	philo.c 		\
 				init_philo.c	\
 				utils.c			\
-				routine_utils.c
+				routine_utils.c	\
+				stop.c
 
 
 OBJS		= ${SRCS:.c=.o}

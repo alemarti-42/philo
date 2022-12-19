@@ -6,7 +6,7 @@
 /*   By: alemarti <alemarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/22 15:42:48 by alemarti          #+#    #+#             */
-/*   Updated: 2022/12/19 14:52:59 by alemarti         ###   ########.fr       */
+/*   Updated: 2022/12/19 18:13:32 by alemarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,19 +45,19 @@ static int	init_forks_mutex(t_data *data)
 	data->mutex_fork = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) \
 					* data->num_philos);
 	if (!data->mutex_fork)
-		return(ft_error("Error: Failed to malloc forks", NULL));
+		return (ft_error("Error: Failed to malloc forks", NULL));
 	i = -1;
 	while (++i < data->num_philos)
 	{
 		if (pthread_mutex_init(data->mutex_fork + i, NULL))
-			return(ft_error("Error: pthread_mutex_fork", data->mutex_fork));
+			return (ft_error("Error: pthread_mutex_fork", data->mutex_fork));
 	}
 	return (0);
 }
 
 static int	init_data(t_data **data, int argc, char **argv)
 {
-	t_data *aux;
+	t_data	*aux;
 
 	aux = (t_data *)malloc(sizeof(t_data));
 	if (!aux)
@@ -67,6 +67,7 @@ static int	init_data(t_data **data, int argc, char **argv)
 	aux->t_eat = get_args(argv[3]);
 	aux->t_sleep = get_args(argv[4]);
 	aux->num_meals = -2;
+	aux->finished = 0;
 	if (argc == 6)
 		aux->num_meals = get_args(argv[5]);
 	if (aux->num_philos < 1 || aux->num_philos > 250 || aux->t_die == -1 || \
@@ -115,8 +116,7 @@ int	init_philos(t_philo **philos, int argc, char **argv)
 	aux = (t_philo *)malloc(sizeof(t_philo) * data->num_philos);
 	if (!aux)
 	{
-		// destroy_data(&data);
-		return(ft_error("Error allocating philos array.", aux));
+		return (ft_error("Error allocating philos array.", aux));
 	}
 	i = -1;
 	while (++i < data->num_philos)

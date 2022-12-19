@@ -6,22 +6,11 @@
 /*   By: alemarti <alemarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/22 15:37:31 by alemarti          #+#    #+#             */
-/*   Updated: 2022/12/19 14:07:12 by alemarti         ###   ########.fr       */
+/*   Updated: 2022/12/19 18:24:40 by alemarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-int		check_stop(t_data *data)
-{
-	int	res;
-
-	pthread_mutex_lock(&data->mutex_data);
-	res = data->flag_stop;
-	pthread_mutex_unlock(&data->mutex_data);
-	//printf("stop:%d\n", res);
-	return (res);
-}
 
 void	print_philo_status(t_philo *philo, char *str)
 {
@@ -42,10 +31,8 @@ long long	find_time(void)
 
 void	destroy_data(t_data *data)
 {
-	//if (data->mutex_printf != 0)
-		pthread_mutex_destroy(&data->mutex_printf);
-	//if (data->mutex_fork == 0)
-		pthread_mutex_destroy(data->mutex_fork);
+	pthread_mutex_destroy(&data->mutex_printf);
+	pthread_mutex_destroy(data->mutex_fork);
 	free (data);
 }
 
@@ -63,19 +50,21 @@ int	ft_error(char *str, void *ptr)
 	return (-1);
 }
 
-// int	destroy_everything(t_philo **philos)
-// {
-// 	int	i;
+int	destroy_everything(t_philo *philos)
+{
+	int	i;
 
-// 	i = -1;
-// 	while (++i < **philos->data->num_philos)
-// 	{
-// 		if (pthread_mutex_destroy(philos->data->mutex_fork + i))
-// 			return(ft_error("Error: pthread_mutex_destroy", data->mutex_fork));
-// 	}
-// 	free(*philos->data->mutex_fork);
-// 	pthread_mutex_destroy(philos->data->mutex_printf);
-// 	pthread_mutex_destroy(philos->data->mutex_data);
-// 	free(philos->data);
-	
-// }
+	i = -1;
+	while (++i < philos->data->num_philos)
+	{
+		if (pthread_mutex_destroy(philos->data->mutex_fork + i))
+			return (ft_error("Error: pthread_mutex_destroy", \
+				philos->data->mutex_fork));
+	}
+	free(philos->data->mutex_fork);
+	pthread_mutex_destroy(&philos->data->mutex_printf);
+	pthread_mutex_destroy(&philos->data->mutex_data);
+	free(philos->data);
+	free(philos);
+	return (0);
+}
