@@ -6,7 +6,7 @@
 /*   By: alemarti <alemarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/22 15:42:48 by alemarti          #+#    #+#             */
-/*   Updated: 2022/12/21 15:58:17 by alemarti         ###   ########.fr       */
+/*   Updated: 2022/12/21 17:50:09 by alemarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,19 +22,17 @@ static int	get_args(const char *str)
 			*str == '\r' || *str == '\t' || *str == '\v')
 		str++;
 	n = 0;
-	if (*str == '-')
-		return (ft_error("Error: Parsing arguments", NULL));
-	if (*str == '+')
+	while (*str == '+')
 		str++;
 	while (*str >= '0' && *str <= '9')
 	{
 		n = n * 10 + *str - '0';
 		if (n > max_int)
-			return (ft_error("Error: Parsing arguments", NULL));
+			return (ft_error("Error: Non-integer number detected", NULL));
 		str++;
 	}
 	if (*str != '\0')
-		return (ft_error("Error: Parsing arguments", NULL));
+		return (ft_error("Error: Non-numerical character found", NULL));
 	return ((int)n);
 }
 
@@ -72,14 +70,14 @@ static int	init_data(t_data **data, int argc, char **argv)
 		aux->num_meals = get_args(argv[5]);
 	if (aux->num_philos < 1 || aux->num_philos > 100 || aux->t_die == -1 || \
 		aux->t_eat == -1 || aux->t_sleep == -1 || aux->num_meals == -1)
-		return (ft_error("Error: Wrong arguments", aux));
+		return (1);
 	aux->flag_stop = 0;
 	if (pthread_mutex_init(&aux->mutex_printf, NULL))
-		return (ft_error("Error: Creating printf mutex.", aux));
+		return (1);
 	if (init_forks_mutex(aux))
-		return (ft_error("Error: Creating forks mutex.", aux));
+		return (1);
 	if (pthread_mutex_init(&aux->mutex_data, NULL))
-		return (ft_error("Error: Creating data mutex.", aux));
+		return (1);
 	*data = aux;
 	return (0);
 }
@@ -113,16 +111,16 @@ int	init_philos(t_philo **philos, int argc, char **argv)
 	int		i;
 
 	if (init_data(&data, argc, argv))
-		return (ft_error("Error: initializing data.", NULL));
+		return (ft_error("Error: init_data()", NULL));
 	aux = (t_philo *)malloc(sizeof(t_philo) * data->num_philos);
 	if (!aux)
 	{
-		return (ft_error("Error: allocating philos array.", aux));
+		return (ft_error("Error: malloc()", aux));
 	}
 	i = -1;
 	while (++i < data->num_philos)
 		if (init_philo(aux + i, i, data, data->mutex_fork))
-			return (ft_error("Error: initializing philosopher", NULL));
+			return (ft_error("Error: init_philo()", NULL));
 	*philos = aux;
 	return (0);
 }

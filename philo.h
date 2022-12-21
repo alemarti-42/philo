@@ -6,7 +6,7 @@
 /*   By: alemarti <alemarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/22 15:30:59 by alemarti          #+#    #+#             */
-/*   Updated: 2022/12/19 18:32:33 by alemarti         ###   ########.fr       */
+/*   Updated: 2022/12/21 17:46:46 by alemarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int			init_philos(t_philo **philos, int argc, char **argv);
 int			take_forks(t_philo *philo);
 void		release_forks(t_philo *philo);
 void		philo_eats(t_philo *philo);
-void		philo_sleep(long long time, t_philo *philo);
+void		philo_sleep(long long time);
 
 //stop.c
 void		trigger_stop(t_data *data);
