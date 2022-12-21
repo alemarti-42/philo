@@ -6,7 +6,7 @@
 /*   By: alemarti <alemarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/22 15:35:45 by alemarti          #+#    #+#             */
-/*   Updated: 2022/12/19 18:25:35 by alemarti         ###   ########.fr       */
+/*   Updated: 2022/12/21 15:57:13 by alemarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,24 @@ static void	*philo_routine(void *arg)
 	while (!check_stop(philo->data))
 	{
 		print_philo_status(philo, "is thinking");
-		if (take_forks(philo))
-			break ;
+		if (take_forks(philo) || check_stop(philo->data))
+		{
+			//printf("TEEEEEEST\n");
+			//trigger_stop(philo->data);
+			philo_sleep(find_time() + philo->data->t_die, philo);
+			break;
+		}
+		// if (check_stop(philo->data))
+		// {
+		// 	release_forks(philo);
+		// 	break ;
+		// }
 		philo_eats(philo);
 		release_forks(philo);
 		print_philo_status(philo, "is sleeping");
 		if (philo->meal_count == 0)
 		{
+			//printf("TEST: philo %d finished %d\n", philo->id, philo->meal_count);
 			philo->data->finished += 1;
 			break ;
 		}
@@ -34,6 +45,14 @@ static void	*philo_routine(void *arg)
 			break ;
 		philo_sleep(find_time() + philo->data->t_sleep, philo);
 	}
+	release_forks(philo);
+	if (philo->meal_count != 0)
+	{
+		//printf("QUE PASAA\n");
+		philo->ts_death = 0;
+		//print_philo_status(philo, "died");
+	}
+	//printf("PHILO %d meal count %d \n", philo->id, philo->meal_count);
 	return (0);
 }
 
@@ -46,15 +65,20 @@ static void	check_loop(t_philo *philo)
 		i = -1;
 		while (++i < philo->data->num_philos)
 		{
-			if ((philo + i)->ts_death < find_time() && philo->meal_count != 0)
+			if ((philo + i)->ts_death < find_time() && (philo + i)->meal_count != 0)
 			{
+				printf("HOLAAAA %d\n", (philo + i)->id);
 				print_philo_status(philo + i, "died");
 				trigger_stop(philo->data);
+				//usleep(1000);
+				printf("ADIOS\n");
+				return ;
 			}
 		}
-		if (philo->data->finished == philo->data->num_philos)
+		if (philo->data->finished >= philo->data->num_philos)
 			trigger_stop(philo->data);
 	}
+	return ;
 }
 
 static void	*monitor_routine(void *arg)
@@ -99,7 +123,9 @@ int	main(int argc, char **argv)
 		return (ft_error("Error: Wrong number of arguments", NULL));
 	if (init_philos(&philos, argc, argv))
 		return (ft_error("Error: Failed to initialize philos", NULL));
-	monitor(philos);
+	//printf("COMER %d\n", philos->data->num_meals);
+	if (philos->data->num_meals != 0)
+		monitor(philos);
 	destroy_everything(philos);
 	return (0);
 }
