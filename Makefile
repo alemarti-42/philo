@@ -6,7 +6,7 @@
 #    By: alemarti <alemarti@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/08/09 15:21:03 by alemarti          #+#    #+#              #
-#    Updated: 2022/12/21 17:42:08 by alemarti         ###   ########.fr        #
+#    Updated: 2022/12/21 18:26:51 by alemarti         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,8 +39,5 @@ fclean:		clean
 			@${RM} ${NAME}
 				
 re:		fclean all
-
-test:	${OBJS}
-			${CC} ${CFLAGS} -O0 -fsanitize=address -g ${OBJS} -pthread -o test
 
 .PHONY: all bonus clean fclean re
